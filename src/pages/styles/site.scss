@@ -1,0 +1,38 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size:62.5%;
+}
+body {
+  font-family: PingFangSC-Medium, Raleway, Hiragino Sans GB, sans-serif;
+  background-color: white;
+}
+
+#app {
+  min-height: 100%;
+}
+
+.primary-layout {
+  .ant-layout {
+    background-color:white;
+  }
+  .ant-layout-header {
+    padding: 0;
+  }
+
+  >section {
+    min-height: 100vh;
+  }
+
+  .ant-layout-header.static-inner-header {
+    background-color: white;
+    height: auto;
+  }
+
+  #graphArea {
+    height: 300px;
+  }
+}
+

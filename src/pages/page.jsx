@@ -2,55 +2,103 @@
 /* eslint-disable react/no-array-index-key */
 // App.js
 import React, { useState, useEffect } from 'react';
-import { render } from 'react-dom';
 import { hot } from 'react-hot-loader';
 import { debounce } from 'lodash-es';
 import classnames from 'classnames';
-import menuConfig from '../config/menu';
-// eslint-disable-next-line import/no-named-as-default
-import pages from '../docs';
+import { Layout, Row, Col, AutoComplete, Input, Cascader, Space  } from "antd";
+const { Header, Content, Footer } = Layout;
 
-let frameLoad = false;
-let editorCode = '';
-const typeOf = obj => Object.prototype.toString.call(obj).slice(8, -1);
-const getMenu = menu => Object.keys(menu).map((key, index) => {
-  const menuObj = menu[key];
-  if (typeOf(menuObj) === 'Object') {
-    return (
-      <div className="nav-level" key={`${key}.${index}`}>
-        <span className="nav-name">{key}</span>
-        {getMenu(menuObj)}
-      </div>
-    );
-  }
-  return (
-    <a key={`${key}.${index}`} className={classnames('nav-item')} href={`#/docs/${key}`}>
-      {menu[key]}
-    </a>
-  );
-});
+import DataTable from './components/dataTable'
+import GraphArea from './components/graph'
+const options = [
+  { value: 'FrankLi' },
+  { value: 'Jeffery' },
+  { value: 'Lloyd' },
+];
 
-const App = () => {
+const cOpetion = [
+  {
+    value: 'levelOne',
+    label: 'level One',
+    children: [
+      {
+        value: 'levelOne-2',
+        label: 'level One-2',
+        children: [
+          {
+            value: 'levelOne-2-1',
+            label: 'levelOne-2 1',
+          },
+          {
+            value: 'levelOne-2-2',
+            label: 'levelOne-2 2',
+          },
+        ],
+      },
+    ],
+  },
+];
+
+const myData = [];
+for (let i = 0; i < 46; i++) {
+  myData.push({
+    key: i,
+    name: `Edward King ${i}`,
+    age: i % 3 + (~(Math.random(0,1) * 100) * -1
+    ),
+    address: `London, Park Lane no. ${i % 5}`,
+  });
+}
+
+const PageContext = () => {
   return (
-    <div className="pages">
-      <div className="header">
-        <div className="logo">
-          <div className="logo-wrap">
-            <img src={headerLogo} alt="logo" />
-          </div>
-        </div>
-        <div className="menu-wrap">
-          <ul className="menu">
-            <li className="menu-item">组件</li>
-            <li className="menu-item">首页</li>
-          </ul>
-        </div>
-      </div>
-      <div className="main">
-        <div className="nav">{getMenu(menuConfig)}</div>
-      </div>
-    </div>
+    <>
+    <Layout>
+      <Header className="static-inner-header">
+        <Row>
+          <Col span={8}>
+            <Space>
+            {"筛选条件一"}
+            <AutoComplete
+              style={{ width: 200 }}
+              options={options}
+              placeholder="try to type `b`"
+              filterOption={(inputValue, option) =>
+                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
+                -1
+              }
+            />
+            </Space>
+          </Col>
+          <Col span={8}>
+            <Space>
+            {"筛选条件二"}
+            <Input />
+            </Space>
+          </Col>
+          <Col span={8}>
+            <Space>
+            {"筛选条件三"}
+            <Cascader options={cOpetion} placeholder="try pick one"/>
+            </Space>
+            </Col>
+          <Col span={24}>
+            <Space>
+            {"筛选条件四"}
+            <Input />
+            {"~"}
+            <Input />
+            </Space>
+          </Col>
+        </Row>
+      </Header>
+      <Content>
+        <DataTable myData={myData}/>
+      </Content>
+    </Layout>
+    <GraphArea myData={myData}/>
+    </>
   );
 };
 
-export default hot(module)(App);
+export default hot(module)(PageContext);

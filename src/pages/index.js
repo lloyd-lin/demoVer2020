@@ -1,60 +1,52 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom'
-import classnames from 'classnames';
-import './styles/base.scss';
-import './styles/demo.scss';
+import SideBar from './components/sideBar'
+import HomePage from './page'
+import LoginPage from './login'
 
-import menuConfig from '../config/menu';
-const typeOf = obj => Object.prototype.toString.call(obj).slice(8, -1);
-const getMenu = menu => Object.keys(menu).map((key, index) => {
-  const menuObj = menu[key];
-  if (typeOf(menuObj) === 'Object') {
-    return (
-      <div className="nav-level" key={`${key}.${index}`}>
-        <span className="nav-name">{key}</span>
-        {getMenu(menuObj)}
-      </div>
-    );
-  }
-  return (
-    <a key={`${key}.${index}`} className={classnames('nav-item')} href={`#/docs/${key}`}>
-      {menu[key]}
-    </a>
-  );
-});
+import './styles/base.scss';
+import './styles/site.scss';
+
+import { Layout, Menu, Breadcrumb } from 'antd';
+import { BarChartOutlined } from '@ant-design/icons';
+
+const { Header, Content, Sider } = Layout;
 
 const PrimaryLayout = () => (
   <div className="primary-layout">
-    <header>
-      Our React Router 4 App
-    </header>
-    <main>
-      <Route path="/" exact component={HomePage} />
-      <Route path="/users" component={UsersPage} />
-    </main>
+    <Route path="/" exact component={LoginPage} />
+    <Layout>
+      <Header className="header">
+        <div className="logo" />
+        <Menu theme="dark" mode="horizontal">
+          <Menu.Item key="1"><BarChartOutlined />Project Name</Menu.Item>
+        </Menu>
+      </Header>
+      <Layout>
+        <Sider>
+          < SideBar />
+        </Sider>
+        <Layout style={{ padding: "0 24px 24px" }}>
+          <Breadcrumb style={{ margin: "16px 0" }}>
+            <Breadcrumb.Item>管理平台</Breadcrumb.Item>
+            <Breadcrumb.Item>数据检索</Breadcrumb.Item>
+          </Breadcrumb>
+          <Content
+            className="site-layout-background"
+            style={{
+              padding: 24,
+              margin: 0,
+              minHeight: 280,
+            }}
+          >
+            <Route path="/home" exact component={HomePage} />
+          </Content>
+        </Layout>
+      </Layout>
+    </Layout>
   </div>
-)
-
-const HomePage =() =>  <div className="pages">
-<div className="header">
-  <div className="logo">
-    <div className="logo-wrap">
-      <img alt="logo" />
-    </div>
-  </div>
-  <div className="menu-wrap">
-    <ul className="menu">
-      <li className="menu-item">组件</li>
-      <li className="menu-item">首页</li>
-    </ul>
-  </div>
-</div>
-<div className="main">
-  <div className="nav">{getMenu(menuConfig)}</div>
-</div>
-</div>
-const UsersPage = () => <div>Users Page</div>
+);
 
 const App = () => (
   <BrowserRouter>

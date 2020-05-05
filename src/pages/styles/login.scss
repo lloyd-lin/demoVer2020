@@ -1,0 +1,30 @@
+.login-page {
+  margin: 5rem auto;
+
+
+  .ant-layout-content {
+    width: 25rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+
+    .login-item {
+      margin: 1rem auto;
+      font-size: 2rem;
+      .anticon-contacts {
+        font-size: 5rem;
+      }
+
+      button {
+        width: 20rem;
+      }
+    }
+
+    .input-area {
+      &-item {
+        margin:0.5rem 0;
+      }
+    }
+  }
+
+}
