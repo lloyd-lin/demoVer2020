@@ -14,7 +14,6 @@ const GraphArea = (props) => {
   useEffect(() => {
     // 基于准备好的dom，初始化echarts实例
     const data = props.myData;
-    console.log('in graph:', data )
 
     const filterData = data.reduce((current, nextPersion) => {
       const key = nextPersion.address;
