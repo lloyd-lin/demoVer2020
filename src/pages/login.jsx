@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
 import { Layout, Input, Button  } from 'antd';
 import { ContactsOutlined, UserOutlined, LoginOutlined  } from '@ant-design/icons';
 import { hot } from 'react-hot-loader';
@@ -8,7 +9,7 @@ import './styles/login.scss'
 
 const { Header, Footer, Sider, Content } = Layout;
 
-const LoginPage = () => {
+const LoginPage = (props) => {
     window.axios =axios;
     const [username, setUsername] = useState('');
     const [password, setPasswort] = useState('');
@@ -36,18 +37,19 @@ const LoginPage = () => {
           </div>
           <div className="login-item">
             <Button type="primary" shape="round" icon={<LoginOutlined />} size="large" onClick={() => {
-              axios({
-                method: 'get',
-                url: 'http://127.0.0.1:8888/DBManagementSystemWcf/user/login',
-                data: {
-                  name: username,
-                  password,
-                }
-              }).then(res=> {
-                console('成功', res)
-              }, e => {
-                console('错误', e)
-              });
+              props.history.push('/home');
+              // axios({
+              //   method: 'get',
+              //   url: 'http://127.0.0.1:8888/DBManagementSystemWcf/user/login',
+              //   data: {
+              //     name: username,
+              //     password,
+              //   }
+              // }).then(res=> {
+              //   console('成功', res)
+              // }, e => {
+              //   console('错误', e)
+              // });
             }}>
               登录
             </Button>
@@ -57,4 +59,4 @@ const LoginPage = () => {
     );
 }
 
-export default hot(module)(LoginPage);
+export default hot(module)(withRouter(LoginPage));
