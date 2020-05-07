@@ -4,11 +4,10 @@ import { Table } from 'antd';
 const DataTable = (props) => {
   const [columns, setColumns] = useState([]);
   const [scrollX, setScrollX] = useState(800);
-  const [pagination, setPagination] = useState({
-    current: 1,
-    pageSize: 10,
-  });
   useEffect(() => {
+    if (props.tableData.length ===0) {
+      return;
+    }
     let columnData = props.tableData && props.tableData[0] && Object.keys(props.tableData[0]).map((key, index) => {
       return {
         title: key,
@@ -25,15 +24,18 @@ const DataTable = (props) => {
     setScrollX(columnData.reduce((current, next) => {
       return current + next.width + 5;
     }, 0))
-    setColumns(tableData);
-    console.log("Did Mount")
-  }, [])
+    setColumns(columnData);
+  }, [props.tableData])
 
   return (
     <div>
-      <div style={{ marginBottom: 16 }}>
-      </div>
-      <Table columns={columns} dataSource={props.tableData} scroll={{ x: scrollX, y: 800 }} />
+      <div style={{ marginBottom: 16 }}></div>
+      <Table
+        columns={columns}
+        dataSource={props.tableData}
+        scroll={{ x: scrollX, y: 800 }}
+        {...props}
+      />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Layout, Input, Button  } from 'antd';
+import { Layout, Input, Button, message  } from 'antd';
 import { ContactsOutlined, UserOutlined, LoginOutlined  } from '@ant-design/icons';
 import { hot } from 'react-hot-loader';
 import axios from 'axios';
@@ -8,11 +8,18 @@ import axios from 'axios';
 import './styles/login.scss'
 
 const { Header, Footer, Sider, Content } = Layout;
+message.config({
+  top: 400,
+  duration: 2,
+  maxCount: 1,
+  rtl: true,
+});
 
 const LoginPage = (props) => {
     window.axios =axios;
     const [username, setUsername] = useState('');
     const [password, setPasswort] = useState('');
+
     return (
       <Layout className="login-page">
         <Content>
@@ -37,19 +44,26 @@ const LoginPage = (props) => {
           </div>
           <div className="login-item">
             <Button type="primary" shape="round" icon={<LoginOutlined />} size="large" onClick={() => {
-              props.history.push('/home');
-              // axios({
-              //   method: 'get',
-              //   url: 'http://127.0.0.1:8888/DBManagementSystemWcf/user/login',
-              //   data: {
-              //     name: username,
-              //     password,
-              //   }
-              // }).then(res=> {
-              //   console('成功', res)
-              // }, e => {
-              //   console('错误', e)
-              // });
+              axios({
+                method: 'post',
+                url: 'http://127.0.0.1:8888/DBManagementSystemWcf/user/login',
+                data: {
+                  name: username,
+                  password,
+                },
+                headers: {
+                  'content-type': 'application/x-www-form-urlencoded'
+                }
+              }).then(res=> {
+                const { data} = res;
+                if (data.res_code === '00' && data.data && data.data[0].Success) {
+                  props.history.push('/home');
+                } else {
+                  message.info(data.data[0].Message);
+                }
+              }, e => {
+                message.info('系统繁忙，稍后再试')
+              });
             }}>
               登录
             </Button>

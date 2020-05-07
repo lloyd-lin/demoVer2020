@@ -11,34 +11,6 @@ const { Option } = Select;
 import DataTable from './components/dataTable'
 import GraphArea from './components/graph'
 import axios from 'axios';
-const options = [
-  { value: 'FrankLi' },
-  { value: 'Jeffery' },
-  { value: 'Lloyd' },
-];
-
-const cOpetion = [
-  {
-    value: 'levelOne',
-    label: 'level One',
-    children: [
-      {
-        value: 'levelOne-2',
-        label: 'level One-2',
-        children: [
-          {
-            value: 'levelOne-2-1',
-            label: 'levelOne-2 1',
-          },
-          {
-            value: 'levelOne-2-2',
-            label: 'levelOne-2 2',
-          },
-        ],
-      },
-    ],
-  },
-];
 
 const response = {
   "current_page": 1,
@@ -262,8 +234,39 @@ const PageContext = () => {
   const [conditionOne, setConditionOne] = useState('');
   const [conditionTwoMin, setConditionTwoMin] = useState('');
   const [conditionTwoMax, setConditionTwoMax] = useState('');
+  const [tableData, setTableData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+  });
+
+  useEffect(() => {
+    setLoading(true)
+    setTimeout(() => {
+      const { data } = response;
+      setLoading(false);
+      setTableData(data);
+      setPagination({
+        ...pagination,
+        total: response.total_page,
+      });      
+    },2000)
+  }, [])
   const handleChange = (value) => {
     setConditionOne(value);
+  }
+  const handleTableChange = (pagination) => {
+    setLoading(true)
+    setTimeout(() => {
+      const { data } = response;
+      setLoading(false);
+      setTableData(data);
+      setPagination({
+        ...pagination,
+        total: response.total_page,
+      });      
+    },2000)
   }
   return (
     <>
@@ -314,7 +317,7 @@ const PageContext = () => {
             </Col>
             <Col span={6}>
             <Button type="primary" onClick={() => {
-              console.log(conditionOne, conditionTwoMin, conditionTwoMax)
+              setLoading(true)
               axios({
                 method: 'get',
                 url: 'http://127.0.0.1:8888/DBManagementSystemWcf/export/getbyconditions',
@@ -325,7 +328,13 @@ const PageContext = () => {
                   pageindex: 1,
                 }
               }).then(res=> {
-                console.log('成功', res)
+                const { data } = res;                
+                setLoading(false)
+                setTableData(data.data);
+                setPagination({
+                  ...pagination,
+                  total: data.total_page
+                })          
               }, e => {
                 console.log('错误', e)
               });
@@ -336,7 +345,13 @@ const PageContext = () => {
           </Row>
         </Header>
         <Content>
-          <DataTable tableData={response.data} />
+          <DataTable 
+            tableData={tableData}
+            loading={loading}
+            rowKey={record => record['ID']}
+            pagination={pagination}
+            onChange={handleTableChange}
+          />
         </Content>
       </Layout>
       {/* <GraphArea myData={myData} /> */}
