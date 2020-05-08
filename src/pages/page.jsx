@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { hot } from 'react-hot-loader';
 import { debounce } from 'lodash-es';
 import classnames from 'classnames';
-import { Layout, Row, Col, Select, Input, Space, Button  } from "antd";
+import { Layout, Row, Col, Select, Input, Space, Button, Modal, message  } from "antd";
 const { Header, Content, Footer } = Layout;
 const { Option } = Select;
 import DataTable from './components/dataTable'
@@ -13,229 +13,271 @@ import GraphArea from './components/graph'
 import axios from 'axios';
 
 const response = {
-  "current_page": 1,
-  "data": [{
-    "CompanyName": "公司21",
-    "Condition1": "16至30",
-    "Condition2": "辛",
-    "Condition3": "亥",
-    "Condition4": "23",
-    "EmployeeID": "GT00055",
-    "Function": "交易",
-    "ID": 3512,
-    "Index1": 1430972,
-    "Index2": 1441961,
-    "Index3": 1455611,
-    "Index4": 1451362,
-    "Index5": 9592,
-    "Index6": 21578718,
-    "Index7": 23032403,
-    "Index8": 23031287,
-    "Index9": 0,
-    "Level": "中级",
-    "PositionLevel": "固收交易：中级专业员工",
-    "SubFunction": "固收交易"
-  }, {
-    "CompanyName": "公司21",
-    "Condition1": "16至30",
-    "Condition2": "辛",
-    "Condition3": "亥",
-    "Condition4": "23",
-    "EmployeeID": "GT00097",
-    "Function": "交易",
-    "ID": 3513,
-    "Index1": 897575,
-    "Index2": 908235,
-    "Index3": 907793,
-    "Index4": 906913,
-    "Index5": 15382,
-    "Index6": 1930161,
-    "Index7": 2845286,
-    "Index8": 2837059,
-    "Index9": 0,
-    "Level": "初级",
-    "PositionLevel": "固收交易：初级专业员工",
-    "SubFunction": "固收交易"
-  }, {
-    "CompanyName": "公司21",
-    "Condition1": "16至30",
-    "Condition2": "辛",
-    "Condition3": "亥",
-    "Condition4": "23",
-    "EmployeeID": "GT00321",
-    "Function": "交易",
-    "ID": 3514,
-    "Index1": 1196969,
-    "Index2": 1196759,
-    "Index3": 1223768,
-    "Index4": 1223418,
-    "Index5": 14939,
-    "Index6": 9692520,
-    "Index7": 10916369,
-    "Index8": 10919527,
-    "Index9": 0,
-    "Level": "中级",
-    "PositionLevel": "固收交易：中级专业员工",
-    "SubFunction": "固收交易"
-  }, {
-    "CompanyName": "公司21",
-    "Condition1": "16至30",
-    "Condition2": "辛",
-    "Condition3": "亥",
-    "Condition4": "23",
-    "EmployeeID": "GT00425",
-    "Function": "交易",
-    "ID": 3515,
-    "Index1": 1083369,
-    "Index2": 1082563,
-    "Index3": 1102651,
-    "Index4": 1095010,
-    "Index5": 22151,
-    "Index6": 1998817,
-    "Index7": 3104186,
-    "Index8": 3094671,
-    "Index9": 0,
-    "Level": "助理",
-    "PositionLevel": "股票交易：助理专业员工",
-    "SubFunction": "股票交易"
-  }, {
-    "CompanyName": "公司21",
-    "Condition1": "16至30",
-    "Condition2": "辛",
-    "Condition3": "亥",
-    "Condition4": "23",
-    "EmployeeID": "GT00457",
-    "Function": "交易",
-    "ID": 3516,
-    "Index1": 712990,
-    "Index2": 863108,
-    "Index3": 730734,
-    "Index4": 882685,
-    "Index5": 21251,
-    "Index6": 1635214,
-    "Index7": 2369736,
-    "Index8": 2509780,
-    "Index9": 0,
-    "Level": "助理",
-    "PositionLevel": "股票交易：助理专业员工",
-    "SubFunction": "股票交易"
-  }, {
-    "CompanyName": "公司21",
-    "Condition1": "16至30",
-    "Condition2": "辛",
-    "Condition3": "亥",
-    "Condition4": "23",
-    "EmployeeID": "GT00021",
-    "Function": "交易",
-    "ID": 3517,
-    "Index1": 1006777,
-    "Index2": 1007184,
-    "Index3": 1020844,
-    "Index4": 1015456,
-    "Index5": 18093,
-    "Index6": 3665068,
-    "Index7": 4694535,
-    "Index8": 4694360,
-    "Index9": 0,
-    "Level": "高级",
-    "PositionLevel": "固收交易：高级专业员工",
-    "SubFunction": "固收交易"
-  }, {
-    "CompanyName": "公司21",
-    "Condition1": "16至30",
-    "Condition2": "辛",
-    "Condition3": "亥",
-    "Condition4": "23",
-    "EmployeeID": "GT00092",
-    "Function": "交易",
-    "ID": 3518,
-    "Index1": 1078723,
-    "Index2": 1084964,
-    "Index3": 1095338,
-    "Index4": 1099306,
-    "Index5": 16303,
-    "Index6": 0,
-    "Index7": 0,
-    "Index8": 0,
-    "Index9": 0,
-    "Level": "助理",
-    "PositionLevel": "固收交易：助理专业员工",
-    "SubFunction": "固收交易"
-  }, {
-    "CompanyName": "公司21",
-    "Condition1": "16至30",
-    "Condition2": "辛",
-    "Condition3": "亥",
-    "Condition4": "23",
-    "EmployeeID": "GT00194",
-    "Function": "交易",
-    "ID": 3519,
-    "Index1": 268449,
-    "Index2": 307689,
-    "Index3": 279541,
-    "Index4": 319365,
-    "Index5": 11899,
-    "Index6": 419806,
-    "Index7": 696792,
-    "Index8": 725217,
-    "Index9": 0,
-    "Level": "助理",
-    "PositionLevel": "固收交易：助理专业员工",
-    "SubFunction": "固收交易"
-  }, {
-    "CompanyName": "公司21",
-    "Condition1": "16至30",
-    "Condition2": "辛",
-    "Condition3": "亥",
-    "Condition4": "23",
-    "EmployeeID": "GT00388",
-    "Function": "基金运营",
-    "ID": 3520,
-    "Index1": 592712,
-    "Index2": 728682,
-    "Index3": 621683,
-    "Index4": 736211,
-    "Index5": 21369,
-    "Index6": 2402658,
-    "Index7": 3019714,
-    "Index8": 3129219,
-    "Index9": 0,
-    "Level": "部门正职",
-    "PositionLevel": "基金运营综合：部门正职",
-    "SubFunction": "基金运营综合"
-  }, {
-    "CompanyName": "公司21",
-    "Condition1": "16至30",
-    "Condition2": "辛",
-    "Condition3": "亥",
-    "Condition4": "23",
-    "EmployeeID": "GT00084",
-    "Function": "基金运营",
-    "ID": 3521,
-    "Index1": 704480,
-    "Index2": 711566,
-    "Index3": 706185,
-    "Index4": 742323,
-    "Index5": 24693,
-    "Index6": 697743,
-    "Index7": 1406871,
-    "Index8": 1433603,
-    "Index9": 0,
-    "Level": "高级",
-    "PositionLevel": "注册登记：高级专业员工",
-    "SubFunction": "注册登记"
-  }],
-  "res_code": "00",
-  "res_msg": "",
-  "total_page": 183
+  column: [
+    { Display: "公司名", Name: "CompanyName", Width: 4 },
+    { Display: "员工ID", Name: "EmployeeID", Width: 4 },
+    { Display: "筛选条件1", Name: "Condition1", Width: 5 },
+    { Display: "筛选条件2", Name: "Condition2", Width: 5 },
+    { Display: "筛选条件3", Name: "Condition3", Width: 5 },
+    { Display: "筛选条件4", Name: "Condition4", Width: 5 },
+    { Display: "职能", Name: "Function", Width: 6 },
+    { Display: "子职能", Name: "SubFunction", Width: 8 },
+    { Display: "职位-层级", Name: "PositionLevel", Width: 13 },
+    { Display: "层级", Name: "Level", Width: 4 },
+    { Display: "指标1", Name: "Index1", Width: 6 },
+    { Display: "指标2", Name: "Index2", Width: 6 },
+    { Display: "指标3", Name: "Index3", Width: 6 },
+    { Display: "指标4", Name: "Index4", Width: 6 },
+    { Display: "指标5", Name: "Index5", Width: 5 },
+    { Display: "指标6", Name: "Index6", Width: 7 },
+    { Display: "指标7", Name: "Index7", Width: 7 },
+    { Display: "指标8", Name: "Index8", Width: 7 },
+    { Display: "指标9", Name: "Index9", Width: 5 },
+  ],
+  current_page: 1,
+  data: [
+    {
+      CompanyName: "公司62",
+      Condition1: "60后",
+      Condition2: "甲",
+      Condition3: "丑",
+      Condition4: 50,
+      EmployeeID: "6",
+      Function: "基金运营",
+      ID: 11755,
+      Index1: 110982,
+      Index2: 143615,
+      Index3: 115591,
+      Index4: 157097,
+      Index5: 5853,
+      Index6: 92403,
+      Index7: 222517,
+      Index8: 247785,
+      Index9: 19453,
+      Level: "助理",
+      PositionLevel: "基金会计：助理专业员工",
+      SubFunction: "基金会计",
+    },
+    {
+      CompanyName: "公司62",
+      Condition1: "60后",
+      Condition2: "甲",
+      Condition3: "丑",
+      Condition4: 50,
+      EmployeeID: "8",
+      Function: "基金运营",
+      ID: 11756,
+      Index1: 308107,
+      Index2: 301759,
+      Index3: 309620,
+      Index4: 304446,
+      Index5: 5472,
+      Index6: 143380,
+      Index7: 455025,
+      Index8: 463658,
+      Index9: 1860,
+      Level: "助理",
+      PositionLevel: "基金会计：助理专业员工",
+      SubFunction: "基金会计",
+    },
+    {
+      CompanyName: "公司62",
+      Condition1: "60后",
+      Condition2: "甲",
+      Condition3: "丑",
+      Condition4: 50,
+      EmployeeID: "9",
+      Function: "基金运营",
+      ID: 11757,
+      Index1: 118784,
+      Index2: 127585,
+      Index3: 125152,
+      Index4: 139696,
+      Index5: 9071,
+      Index6: 111735,
+      Index7: 252597,
+      Index8: 255336,
+      Index9: 11418,
+      Level: "助理",
+      PositionLevel: "基金会计：助理专业员工",
+      SubFunction: "基金会计",
+    },
+    {
+      CompanyName: "公司62",
+      Condition1: "60后",
+      Condition2: "甲",
+      Condition3: "丑",
+      Condition4: 50,
+      EmployeeID: "10",
+      Function: "基金运营",
+      ID: 11758,
+      Index1: 291040,
+      Index2: 361300,
+      Index3: 299779,
+      Index4: 371263,
+      Index5: 14272,
+      Index6: 1581380,
+      Index7: 1887355,
+      Index8: 1946895,
+      Index9: 16648,
+      Level: "助理",
+      PositionLevel: "基金会计：助理专业员工",
+      SubFunction: "基金会计",
+    },
+    {
+      CompanyName: "公司62",
+      Condition1: "60后",
+      Condition2: "甲",
+      Condition3: "丑",
+      Condition4: 50,
+      EmployeeID: "11",
+      Function: "基金运营",
+      ID: 11759,
+      Index1: 477917,
+      Index2: 487463,
+      Index3: 476699,
+      Index4: 493673,
+      Index5: 194,
+      Index6: 772904,
+      Index7: 1265525,
+      Index8: 1265388,
+      Index9: 14228,
+      Level: "助理",
+      PositionLevel: "基金会计：助理专业员工",
+      SubFunction: "基金会计",
+    },
+    {
+      CompanyName: "公司62",
+      Condition1: "60后",
+      Condition2: "甲",
+      Condition3: "丑",
+      Condition4: 50,
+      EmployeeID: "12",
+      Function: "基金运营",
+      ID: 11760,
+      Index1: 243501,
+      Index2: 243596,
+      Index3: 240073,
+      Index4: 247722,
+      Index5: -1137,
+      Index6: 2746,
+      Index7: 240787,
+      Index8: 248953,
+      Index9: 4389,
+      Level: "助理",
+      PositionLevel: "基金会计：助理专业员工",
+      SubFunction: "基金会计",
+    },
+    {
+      CompanyName: "公司62",
+      Condition1: "60后",
+      Condition2: "甲",
+      Condition3: "丑",
+      Condition4: 50,
+      EmployeeID: "13",
+      Function: "基金运营",
+      ID: 11761,
+      Index1: 305353,
+      Index2: 365743,
+      Index3: 311346,
+      Index4: 362286,
+      Index5: 12961,
+      Index6: 309263,
+      Index7: 620028,
+      Index8: 663992,
+      Index9: 14334,
+      Level: "初级",
+      PositionLevel: "基金会计：初级专业员工",
+      SubFunction: "基金会计",
+    },
+    {
+      CompanyName: "公司62",
+      Condition1: "60后",
+      Condition2: "甲",
+      Condition3: "丑",
+      Condition4: 50,
+      EmployeeID: "14",
+      Function: "基金运营",
+      ID: 11762,
+      Index1: 831873,
+      Index2: 838950,
+      Index3: 851100,
+      Index4: 844535,
+      Index5: 4968,
+      Index6: 437945,
+      Index7: 1290931,
+      Index8: 1297896,
+      Index9: 14927,
+      Level: "初级",
+      PositionLevel: "基金会计：初级专业员工",
+      SubFunction: "基金会计",
+    },
+    {
+      CompanyName: "公司62",
+      Condition1: "60后",
+      Condition2: "甲",
+      Condition3: "丑",
+      Condition4: 50,
+      EmployeeID: "15",
+      Function: "基金运营",
+      ID: 11763,
+      Index1: 294884,
+      Index2: 359503,
+      Index3: 294584,
+      Index4: 372122,
+      Index5: -2126,
+      Index6: 373207,
+      Index7: 659794,
+      Index8: 732187,
+      Index9: 16146,
+      Level: "初级",
+      PositionLevel: "基金会计：初级专业员工",
+      SubFunction: "基金会计",
+    },
+    {
+      CompanyName: "公司62",
+      Condition1: "60后",
+      Condition2: "甲",
+      Condition3: "丑",
+      Condition4: 50,
+      EmployeeID: "16",
+      Function: "基金运营",
+      ID: 11764,
+      Index1: 488522,
+      Index2: 595987,
+      Index3: 490222,
+      Index4: 618952,
+      Index5: 15664,
+      Index6: 229362,
+      Index7: 719036,
+      Index8: 839585,
+      Index9: 11030,
+      Level: "初级",
+      PositionLevel: "基金会计：初级专业员工",
+      SubFunction: "基金会计",
+    },
+  ],
+  res_code: "00",
+  res_msg: "",
+  total_count: 131,
+  total_page: 14,
 };
+message.config({
+  top: 100,
+  duration: 2,
+  maxCount: 1,
+  rtl: true,
+});
 
 const PageContext = () => {
   const [conditionOne, setConditionOne] = useState('');
   const [conditionTwoMin, setConditionTwoMin] = useState('');
   const [conditionTwoMax, setConditionTwoMax] = useState('');
   const [tableData, setTableData] = useState([]);
+  const [columnData, setColumnData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showPropose, setShowPropose] = useState(false);
+  const [propose, setPropose] = useState('');
   const [pagination, setPagination] = useState({
     total: 0,
     current: 1,
@@ -260,20 +302,23 @@ const PageContext = () => {
       } = res;
       setLoading(false)
       setTableData(data.data);
+      setColumnData(data.column);
       setPagination({
         ...pagination,
         total: data.total_count
       })
     }, e => {
-      const {
-        data
-      } = response;
-      setLoading(false)
-      setTableData(data);
-      setPagination({
-        ...pagination,
-        total: response.total_page
-      })
+      // const {
+      //   data,
+      //   column
+      // } = response;
+      // setLoading(false)
+      // setTableData(data);
+      // setColumnData(column);
+      // setPagination({
+      //   ...pagination,
+      //   total: response.total_page
+      // })
       
       setLoading(false)
       console.log('错误', e)
@@ -299,6 +344,7 @@ const PageContext = () => {
       } = res;
       setLoading(false)
       setTableData(data.data);
+      setColumnData(data.column);
       setPagination({
         ...pagination,
         total: data.total_count
@@ -318,6 +364,33 @@ const PageContext = () => {
       console.log('错误', e)
     });
   }
+
+  const handleOk = () => {
+    setLoading(true)
+    axios({
+      method: 'post',
+      url: 'http://127.0.0.1:8888/DBManagementSystemWcf/export/savebyconditions',
+      data: {
+        con1: conditionOne,
+        con4: `${conditionTwoMin || '*'}~${conditionTwoMax || '*'}`,
+        proposeName: propose,
+        userNo: localStorage.getItem('UserNo')
+      },
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded'
+      }
+    }).then(res => {
+      setLoading(false)
+      message.info(res.data.Message);
+    }, e => {
+      setLoading(false)
+      message.info('保存方案失败');
+    });
+  }
+  const handleCancel = () => {
+    setShowPropose(false);
+    setPropose('')
+  }
   return (
     <>
       <Layout>
@@ -328,83 +401,115 @@ const PageContext = () => {
                 {"筛选条件一"}
                 <Select
                   mode="multiple"
-                  style={{ "minWidth": "30rem" }}
+                  style={{ minWidth: "30rem" }}
                   placeholder="选择筛选条件"
                   defaultValue={[]}
                   onChange={handleChange}
                   optionLabelProp="label"
                 >
                   <Option value="前15" label="befor15">
-                    <div className="demo-option-label-item">
-                      前15
-                    </div>
+                    <div className="demo-option-label-item">前15</div>
                   </Option>
                   <Option value="16至30" label="15to30">
-                    <div className="demo-option-label-item">
-                      16至30
-                    </div>
+                    <div className="demo-option-label-item">16至30</div>
                   </Option>
                   <Option value="31至60" label="31to60">
-                    <div className="demo-option-label-item">
-                     31至60
-                    </div>
+                    <div className="demo-option-label-item">31至60</div>
                   </Option>
                   <Option value="60后" label="after60">
-                    <div className="demo-option-label-item">
-                     60后
-                    </div>
+                    <div className="demo-option-label-item">60后</div>
                   </Option>
                 </Select>
               </Space>
             </Col>
-            <Col span={18}>
+            <Col span={16}>
               <Space>
                 {"筛选条件四"}
-                <Input onChange={(e) => setConditionTwoMin(e.currentTarget.value)}/>
+                <Input
+                  placeholder={"最小值"}
+                  onChange={(e) => setConditionTwoMin(e.currentTarget.value)}
+                />
                 {"~"}
-                <Input onChange={(e) => setConditionTwoMax(e.currentTarget.value)}/>
+                <Input
+                  placeholder={"最大值"}
+                  onChange={(e) => setConditionTwoMax(e.currentTarget.value)}
+                />
               </Space>
             </Col>
-            <Col span={6}>
-            <Button type="primary" onClick={() => {
-              setLoading(true)
-              axios({
-                method: 'get',
-                url: 'http://127.0.0.1:8888/DBManagementSystemWcf/export/getbyconditions',
-                params: {
-                  con1: conditionOne,
-                  con4: `${conditionTwoMin || '*'}~${conditionTwoMax || '*'}`,
-                  pagesize: 10,
-                  pageindex: 1,
-                }
-              }).then(res=> {
-                const { data } = res;                
-                setLoading(false)
-                setTableData(data.data);
-                setPagination({
-                  pageSize: 10,
-                  current: 1,
-                  total: data.total_count
-                })          
-              }, e => {
-                setLoading(false)
-                console.log('错误', e)
-              });
-            }}>
-              检索
-            </Button>
+            <Col span={4}>
+              <Button
+                type="primary"
+                onClick={() => {
+                  setLoading(true);
+                  axios({
+                    method: "get",
+                    url:
+                      "http://127.0.0.1:8888/DBManagementSystemWcf/export/getbyconditions",
+                    params: {
+                      con1: conditionOne,
+                      con4: `${conditionTwoMin || "*"}~${
+                        conditionTwoMax || "*"
+                      }`,
+                      pagesize: 10,
+                      pageindex: 1,
+                    },
+                  }).then(
+                    (res) => {
+                      const { data } = res;
+                      setLoading(false);
+                      setTableData(data.data);
+                      setColumnData(data.column);
+                      setPagination({
+                        ...pagination,
+                        pageSize: 10,
+                        current: 1,
+                        total: data.total_count,
+                      });
+                    },
+                    (e) => {
+                      setLoading(false);
+                      console.log("错误", e);
+                    }
+                  );
+                }}
+              >
+                检索
+              </Button>
+            </Col>
+            <Col span={4}>
+              <Button
+                type="primary"
+                onClick={() => {
+                  setShowPropose(true)
+                }}
+              >
+                保存当前方案
+              </Button>
             </Col>
           </Row>
         </Header>
         <Content>
-          <DataTable 
+          <DataTable
             tableData={tableData}
+            columnData={columnData}
             loading={loading}
-            rowKey={record => record['ID']}
+            rowKey={(record) => record["ID"]}
             pagination={pagination}
             onChange={handleTableChange}
           />
         </Content>
+        <Modal
+          title="保存方案"
+          visible={showPropose}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+           <Input
+              value={propose}
+              placeholder={"方案名"}
+              onChange={(e) => setPropose(e.currentTarget.value)}
+            />
+        </Modal>
       </Layout>
       {/* <GraphArea myData={myData} /> */}
     </>

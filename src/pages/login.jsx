@@ -55,11 +55,11 @@ const LoginPage = (props) => {
                   'content-type': 'application/x-www-form-urlencoded'
                 }
               }).then(res=> {
-                const { data} = res;
-                if (data.res_code === '00' && data.data && data.data[0].Success) {
+                if (res.data && res.data.Success) {
+                  localStorage.setItem("UserNo", res.data.UserNo)
                   props.history.push('/home');
                 } else {
-                  message.info(data.data[0].Message);
+                  message.info(res.data.Message);
                 }
               }, e => {
                 message.info('系统繁忙，稍后再试')

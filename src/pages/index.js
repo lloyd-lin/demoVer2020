@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Route } from "react-router-dom";
+import { HashRouter, Route } from "react-router-dom";
 import SideBar from "./components/sideBar";
 import HomePage from "./page";
 import LoginPage from "./login";
@@ -62,9 +62,9 @@ const PrimaryLayout = () => {
 };
 
 const App = () => (
-  <BrowserRouter>
+  <HashRouter>
     <PrimaryLayout />
-  </BrowserRouter>
+  </HashRouter>
 );
 
 ReactDOM.render(<App />, document.getElementById("app"));

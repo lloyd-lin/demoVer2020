@@ -5,27 +5,20 @@ const DataTable = (props) => {
   const [columns, setColumns] = useState([]);
   const [scrollX, setScrollX] = useState(800);
   useEffect(() => {
-    if (props.tableData.length ===0) {
-      return;
-    }
-    let columnData = props.tableData && props.tableData[0] && Object.keys(props.tableData[0]).map((key, index) => {
+    let columnData = props.columnData && props.columnData.map((key, index) => {
       return {
-        title: key,
-        width: (Math.floor(key.length / 5) || 1) * 100,
-        dataIndex: key,
-        key,
+        title: key.Display,
+        width: (Math.floor(key.Width / 5) || 1) * 100,
+        dataIndex: key.Name,
+        key: key.Name,
         fixed: index === 0 ? 'left' : false,
       }
-    })
-    const tableData = props.tableData.map((item, index) => {
-      item.key = index;
-      return item;
     })
     setScrollX(columnData.reduce((current, next) => {
       return current + next.width + 5;
     }, 0))
     setColumns(columnData);
-  }, [props.tableData])
+  }, [props.columnData])
 
   return (
     <div>
