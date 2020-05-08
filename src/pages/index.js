@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { HashRouter, Route } from "react-router-dom";
 import SideBar from "./components/sideBar";
-import HomePage from "./page";
+import HomePage from "./origin";
+import HistoryPage from "./history";
 import LoginPage from "./login";
 import menuConfig from "../config/menu";
 
@@ -21,6 +22,13 @@ const PrimaryLayout = () => {
 
   }, []);
   const handleSideBar = (key) => {
+    const menuOne = menuConfig.find((value) => {
+      return value.key === key[1];
+    })
+    const valueTwo = menuOne.children.find((value) => {
+      return value.key === key[0];
+    })
+    setBreadCrumbArr([menuOne.value, valueTwo.value])
     console.log(key)
   }
   return (
@@ -52,7 +60,8 @@ const PrimaryLayout = () => {
                 minHeight: 280
               }}
             >
-              <Route path="/home" exact component={HomePage} />
+              <Route path="/origin-search" exact component={HomePage} />
+              <Route path="/history-search" exact component={HistoryPage} />
             </Content>
           </Layout>
         </Layout>

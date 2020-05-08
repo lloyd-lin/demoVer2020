@@ -5,14 +5,15 @@ import { debounce } from 'lodash-es';
 import classnames from 'classnames';
 import { Menu, Switch } from 'antd';
 import { InsertRowLeftOutlined, SettingOutlined } from '@ant-design/icons';
+import { withRouter } from 'react-router-dom';
 
 const { SubMenu } = Menu;
 const Sider = (props) => {
-  const [current, setCurrent] = useState('1')
+  const [current, setCurrent] = useState(['origin-search','search'])
 
   const handleClick = e => {
-    console.log('click ', e);
-    setCurrent(e.key)
+    setCurrent(e.keyPath)
+    props.handleSideBar(e.keyPath);
   };
 
   const iconFactory = (iconName) => {
@@ -29,15 +30,18 @@ const Sider = (props) => {
         theme={'dark'}
         onClick={handleClick}
         style={{ width: 200 }}
-        defaultOpenKeys={['search']}
-        selectedKeys={['origin-search']}
+        defaultOpenKeys={[current[1]]}
+        selectedKeys={[current[0]]}
         mode="inline"
       >
         {props.sideMenu.map((item) => {
           return <SubMenu key={item.key} icon={iconFactory(item.icon)} title={item.value}>
             {
               item.children.map(secItem => {
-                return <Menu.Item key={secItem.key}>{secItem.value}</Menu.Item>
+                return <Menu.Item key={secItem.key} onClick={() => {
+
+                  props.history.push(`/${secItem.key}`);
+                }}>{secItem.value}</Menu.Item>
               })
             }
           </SubMenu>
@@ -47,4 +51,4 @@ const Sider = (props) => {
   );
 };
 
-export default hot(module)(Sider);
+export default hot(module)(withRouter(Sider));

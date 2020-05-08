@@ -57,7 +57,7 @@ const LoginPage = (props) => {
               }).then(res=> {
                 if (res.data && res.data.Success) {
                   localStorage.setItem("UserNo", res.data.UserNo)
-                  props.history.push('/home');
+                  props.history.push('/origin-search');
                 } else {
                   message.info(res.data.Message);
                 }
