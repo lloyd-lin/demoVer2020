@@ -1,27 +1,41 @@
-export default {
-  Introduce: '快速上手',
-  Changelog: '更新日志',
-  工具: {
-    trackingHelper: '埋点工具',
+export default [
+  {
+    key: 'user',
+    value: '用户管理',
+    icon: 'SettingOutlined',
+    children: [
+      {
+        key: 'auth',
+        value: '用户授权',
+        icon: '',
+      },
+      {
+        key: 'manager-pwd',
+        value: '密码管理',
+        icon: '',
+      },
+      {
+        key: 'log',
+        value: '日志查看',
+        icon: '',
+      },
+    ]
   },
-  组件: {
-    基本: {
-      AlterMask: '提示蒙层',
-      ChannelCarousel: '轮播器',
-      QAMask: '蒙层',
-      Category: '类目标题',
-      Clip: '夹子形标题',
-      WrapSymbol: '字符串包装器',
-      Score: '分数',
-      CustomIframe: '自定义iframe',
-    },
-    '标准卡片(新版)': {
-      StandardCard: '卡片',
-      Composer: '卡片组',
-      StandardCardLegacy: '卡片(旧版UI)',
-      ComposerLegacy: '卡片组(旧版UI)',
-      CMSCard: '广告位卡',
-      TagBar: '产品标签',
-    },
-  },
-};
+  {
+    key: 'search',
+    value: '数据检索',
+    icon: 'InsertRowLeftOutlined',
+    children: [
+      {
+        key: 'origin-search',
+        value: '原始数据检索查询',
+        icon: '',
+      },
+      {
+        key: 'history-search',
+        value: '历史方案查询',
+        icon: '',
+      },
+    ]
+  }
+];

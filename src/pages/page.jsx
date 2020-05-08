@@ -237,36 +237,86 @@ const PageContext = () => {
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
+    total: 0,
     current: 1,
     pageSize: 10,
+    showSizeChanger: false,
+    showQuickJumper: true,
+    showTotal: total => `总条目 ${total} 条`
   });
 
   useEffect(() => {
     setLoading(true)
-    setTimeout(() => {
-      const { data } = response;
-      setLoading(false);
+    axios({
+      method: 'get',
+      url: 'http://127.0.0.1:8888/DBManagementSystemWcf/export/getbyconditions',
+      params: {
+        pagesize: pagination.pageSize,
+        pageindex: pagination.current,
+      }
+    }).then(res => {
+      const {
+        data
+      } = res;
+      setLoading(false)
+      setTableData(data.data);
+      setPagination({
+        ...pagination,
+        total: data.total_count
+      })
+    }, e => {
+      const {
+        data
+      } = response;
+      setLoading(false)
       setTableData(data);
       setPagination({
         ...pagination,
-        total: response.total_page,
-      });      
-    },2000)
+        total: response.total_page
+      })
+      
+      setLoading(false)
+      console.log('错误', e)
+    });
   }, [])
   const handleChange = (value) => {
-    setConditionOne(value);
+    setConditionOne(value.length > 0 ? JSON.stringify(value) : '');
   }
   const handleTableChange = (pagination) => {
     setLoading(true)
-    setTimeout(() => {
-      const { data } = response;
-      setLoading(false);
+    axios({
+      method: 'get',
+      url: 'http://127.0.0.1:8888/DBManagementSystemWcf/export/getbyconditions',
+      params: {
+        con1: conditionOne,
+        con4: `${conditionTwoMin || '*'}~${conditionTwoMax || '*'}`,
+        pagesize: pagination.pageSize,
+        pageindex: pagination.current,
+      }
+    }).then(res => {
+      const {
+        data
+      } = res;
+      setLoading(false)
+      setTableData(data.data);
+      setPagination({
+        ...pagination,
+        total: data.total_count
+      })
+    }, e => {
+      const {
+        data
+      } = response;
+      setLoading(false)
       setTableData(data);
       setPagination({
         ...pagination,
-        total: response.total_page,
-      });      
-    },2000)
+        total: response.total_page
+      })
+
+      setLoading(false)
+      console.log('错误', e)
+    });
   }
   return (
     <>
@@ -322,7 +372,7 @@ const PageContext = () => {
                 method: 'get',
                 url: 'http://127.0.0.1:8888/DBManagementSystemWcf/export/getbyconditions',
                 params: {
-                  con1: JSON.stringify(conditionOne),
+                  con1: conditionOne,
                   con4: `${conditionTwoMin || '*'}~${conditionTwoMax || '*'}`,
                   pagesize: 10,
                   pageindex: 1,
@@ -332,10 +382,12 @@ const PageContext = () => {
                 setLoading(false)
                 setTableData(data.data);
                 setPagination({
-                  ...pagination,
-                  total: data.total_page
+                  pageSize: 10,
+                  current: 1,
+                  total: data.total_count
                 })          
               }, e => {
+                setLoading(false)
                 console.log('错误', e)
               });
             }}>

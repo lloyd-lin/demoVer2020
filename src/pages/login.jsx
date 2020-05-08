@@ -26,7 +26,7 @@ const LoginPage = (props) => {
           <div className="login-item">
             <ContactsOutlined />
           </div>
-          <div className="login-item">霸气的名字</div>
+          <div className="login-item">登录系统</div>
           <div className="input-area">
             <div className="input-area-item">
               <Input
