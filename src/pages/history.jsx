@@ -13,6 +13,48 @@ import GraphArea from './components/graph'
 import axios from 'axios';
 
 const response = {
+  "column": [{
+    "Display": "方案名称",
+    "Name": "ProposeName",
+    "Width": 4
+  }, {
+    "Display": "筛选条件1",
+    "Name": "Condition1",
+    "Width": 7
+  }, {
+    "Display": "筛选条件2",
+    "Name": "Condition2",
+    "Width": 5
+  }, {
+    "Display": "筛选条件3",
+    "Name": "Condition3",
+    "Width": 5
+  }, {
+    "Display": "筛选条件4",
+    "Name": "Condition4",
+    "Width": 5
+  }, {
+    "Display": "提交时间",
+    "Name": "CreateTime",
+    "Width": 16
+  }],
+  "current_page": 1,
+  "data": [{
+    "Condition1": "[\"前15\"]",
+    "Condition2": null,
+    "Condition3": null,
+    "Condition4": "12~60",
+    "CreateTime": "2020\/5\/9 8:39:51",
+    "ID": 1,
+    "ProposeName": "方案1"
+  }],
+  "res_code": "00",
+  "res_msg": "",
+  "total_count": 1,
+  "total_page": 1
+}
+
+const response2 = {
   column: [
     { Display: "公司名", Name: "CompanyName", Width: 4 },
     { Display: "员工ID", Name: "EmployeeID", Width: 4 },
@@ -269,10 +311,64 @@ message.config({
   rtl: true,
 });
 
+const graph1 = {
+  "AvgValue": {
+    "Index1": 200609.47,
+    "Index2": 224124.23,
+    "Index3": 204702.80,
+    "Index4": 230743.72,
+    "Index5": 4517.49,
+    "Index6": 194910.03,
+    "Index7": 396512.16,
+    "Index8": 406403.07,
+    "Index9": 8704.25
+  },
+  "Message": "统计方案平均值完成",
+  "ProposeName": "方案1"
+}
+
+const graph2 = {
+  "AvgValue": {
+    "Index1": 305723.26,
+    "Index2": 326539.13,
+    "Index3": 338491.94,
+    "Index4": 350407.49,
+    "Index5": 32936.275,
+    "Index6": 403612.38,
+    "Index7": 715284.48,
+    "Index8": 713130.08,
+    "Index9": 9347.38,
+  },
+  "Message": "统计方案平均值完成",
+  "ProposeName": null
+}
+
+const myData = {
+  proposeName: graph1.ProposeName,
+  dataColumn: Object.keys(graph1['AvgValue']),
+  axis: {
+    min: 0,
+    max: 750000,
+    interval: 50000,
+  },
+  "方案1": Object.keys(graph1['AvgValue']).reduce((current, next) => {
+    current.push(graph1['AvgValue'][next])
+    return current;
+  }, []),
+  "all": Object.keys(graph2['AvgValue']).reduce((current, next) => {
+    current.push(graph2['AvgValue'][next])
+    return current;
+  }, []),
+  "percentage": Object.keys(graph2['AvgValue']).reduce((current, next) => {
+    current.push(graph1['AvgValue'][next] / graph2['AvgValue'][next])
+    return current;
+  }, [])
+}
 const PageContext = () => {
   const [tableData, setTableData] = useState([]);
   const [columnData, setColumnData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [currentMode, setCurrentMode] = useState('propose');
   const [pagination, setPagination] = useState({
     total: 0,
     current: 1,
@@ -296,6 +392,80 @@ const PageContext = () => {
       const {
         data
       } = res;
+      const newColumn = Array.from(data.column)
+      newColumn.push({
+        "Display": "操作",
+        "Name": "Action",
+        "Width": 10,
+        "Action": (text, record) => (
+          <Space size="middle">
+            <a onClick={browseHistory.bind(null, record.ProposeName)}>查看历史数据</a>
+          </Space>
+        ),
+      })
+      setLoading(false)
+      setTableData(data.data);
+      setColumnData(newColumn);
+      setPagination({
+        ...pagination,
+        total: data.total_count
+      })
+    }, e => {
+      // const { column, data } = response;
+      // setLoading(false)
+      // const newColumn = Array.from(column)
+      // newColumn.push({
+      //   "Display": "操作",
+      //   "Name": "Action",
+      //   "Width": 10,
+      //   "Action": (text, record) => (
+      //     <Space size="middle">
+      //       <a onClick={browseHistory.bind(null, record.ProposeName)}>查看历史数据</a>
+      //     </Space>
+      //   ),
+      // })
+      // setTableData(data);
+      // setColumnData(newColumn);
+      // setPagination({
+      //   ...pagination,
+      //   total: response.total_page
+      // })
+      
+      // setLoading(false)
+      console.log('错误', e)
+    });
+    return () => {
+      setColumnData([]);
+      setTableData([]);
+    }
+  }, [])
+
+  const resetPaganation = () => {
+    setPagination({
+      current: 1,
+      pageSize: 10,
+      showSizeChanger: false,
+      showQuickJumper: true,
+      showTotal: total => `总条目 ${total} 条`,
+    })
+  }
+
+  const browseHistory = (name) => {
+    setLoading(true)
+    axios({
+      method: 'get',
+      url: 'http://127.0.0.1:8888/DBManagementSystemWcf/export/getbyproposename',
+      params: {
+        proposename: name,
+        pagesize: pagination.pageSize,
+        pageindex: 1,
+      }
+    }).then(res => {
+      setCurrentMode('history')
+      resetPaganation();
+      const {
+        data
+      } = res;
       setLoading(false)
       setTableData(data.data);
       setColumnData(data.column);
@@ -304,26 +474,28 @@ const PageContext = () => {
         total: data.total_count
       })
     }, e => {
-      // const {
-      //   data,
-      //   column
-      // } = response;
+      // setCurrentMode('history')
+      // const { column, data } = response2;
       // setLoading(false)
       // setTableData(data);
       // setColumnData(column);
       // setPagination({
-      //   ...pagination,
-      //   total: response.total_page
+      //   current: 1,
+      //   pageSize: 10,
+      //   showSizeChanger: false,
+      //   showQuickJumper: true,
+      //   showTotal: total => `总条目 ${total} 条`,
+      //   total: response2.total_page,
       // })
       
       setLoading(false)
       console.log('错误', e)
-    });
-  }, [])
+    })
+  }
 
   const handleTableChange = (pagination) => {
     setLoading(true)
-    axios({
+    const param = currentMode === 'propose' ? {
       method: 'get',
       url: 'http://127.0.0.1:8888/DBManagementSystemWcf/export/getproposebyuserno',
       params: {
@@ -331,11 +503,32 @@ const PageContext = () => {
         pagesize: pagination.pageSize,
         pageindex: pagination.current,
       }
-    }).then(res => {
+    } : {
+      method: 'get',
+      url: 'http://127.0.0.1:8888/DBManagementSystemWcf/export/getbyproposename',
+      params: {
+        pagesize: pagination.pageSize,
+        pageindex: pagination.current,
+      }
+    }
+    axios(param).then(res => {
       const {
         data
       } = res;
       setLoading(false)
+      if (currentMode === 'propose') {
+        const newColumn = Array.from(data.column)
+        newColumn.push({
+          "Display": "操作",
+          "Name": "Action",
+          "Width": 10,
+          "Action": (text, record) => (
+            <Space size="middle">
+              <a onClick={browseHistory.bind(null, record.ProposeName)}>查看历史数据</a>
+            </Space>
+          ),
+        })
+      }
       setTableData(data.data);
       setColumnData(data.column);
       setPagination({
@@ -348,10 +541,86 @@ const PageContext = () => {
     });
   }
 
-  
+  const backToProposeList = () => {
+    setLoading(true)
+    axios({
+      method: 'get',
+      url: 'http://127.0.0.1:8888/DBManagementSystemWcf/export/getbyproposename',
+      params: {
+        pagesize: pagination.pageSize,
+        pageindex: 1,
+      }
+    }).then(res => {
+      setCurrentMode('propose')
+      const {
+        data
+      } = res;
+      resetPaganation();
+      const newColumn = Array.from(data.column)
+      newColumn.push({
+        "Display": "操作",
+        "Name": "Action",
+        "Width": 10,
+        "Action": (text, record) => (
+          <Space size="middle">
+            <a onClick={browseHistory.bind(null, record.ProposeName)}>查看历史数据</a>
+          </Space>
+        ),
+      })
+      setLoading(false)
+      setTableData(data.data);
+      setColumnData(newColumn);
+      setPagination({
+        ...pagination,
+        total: data.total_count
+      })
+    }, e => {
+      // const { column, data } = response;
+      // setLoading(false)
+      // const newColumn = Array.from(column)
+      // newColumn.push({
+      //   "Display": "操作",
+      //   "Name": "Action",
+      //   "Width": 10,
+      //   "Action": (text, record) => (
+      //     <Space size="middle">
+      //       <a onClick={browseHistory.bind(null, record.ProposeName)}>查看历史数据</a>
+      //     </Space>
+      //   ),
+      // })
+      // setTableData(data);
+      // setColumnData(newColumn);
+      // setPagination({
+      //   current: 1,
+      //   pageSize: 10,
+      //   showSizeChanger: false,
+      //   showQuickJumper: true,
+      //   showTotal: total => `总条目 ${total} 条`,
+      //   total: response2.total_page,
+      // })
+      
+      // setLoading(false)
+      console.log('错误', e)
+    })
+  }
   return (
     <>
       <Layout>
+        {currentMode === 'history' && <Header className="static-inner-header">
+          <Row>
+            <Col span={4}>
+            <Button type="primary" onClick={backToProposeList}>
+              返回方案列表
+            </Button>
+            </Col>
+            <Col span={4}>
+            <Button type="primary" onClick={()=> {
+            }}>
+              生成统计
+            </Button>
+            </Col>
+          </Row>
+        </Header>}
         <Content>
           <DataTable
             tableData={tableData}
@@ -362,8 +631,9 @@ const PageContext = () => {
             onChange={handleTableChange}
           />
         </Content>
+
       </Layout>
-      {/* <GraphArea myData={myData} /> */}
+      <GraphArea myData={myData}/>
     </>
   );
 };

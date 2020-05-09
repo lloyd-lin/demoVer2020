@@ -6,12 +6,23 @@ const DataTable = (props) => {
   const [scrollX, setScrollX] = useState(800);
   useEffect(() => {
     let columnData = props.columnData && props.columnData.map((key, index) => {
-      return {
-        title: key.Display,
-        width: (Math.floor(key.Width / 5) || 1) * 100,
-        dataIndex: key.Name,
-        key: key.Name,
-        fixed: index === 0 ? 'left' : false,
+      if (key.Action) {
+        return {
+          title: key.Display,
+          width: key.Width * 20,
+          dataIndex: key.Name,
+          key: key.Name,
+          fixed: 'right',
+          render: key.Action,
+        }
+      } else {
+        return {
+          title: key.Display,
+          width: key.Width * 20,
+          dataIndex: key.Name,
+          key: key.Name,
+          fixed: index === 0 ? 'left' : false,
+        }
       }
     })
     setScrollX(columnData.reduce((current, next) => {
