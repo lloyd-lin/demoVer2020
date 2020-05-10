@@ -32,14 +32,14 @@ const GraphArea = (props) => {
       },
       toolbox: {
           feature: {
-              dataView: {show: true, readOnly: false},
-              magicType: {show: true, type: ['line', 'bar']},
+              dataView: {show: true, readOnly: true},
               restore: {show: true},
               saveAsImage: {show: true}
-          }
+          },
+          top: -10,
       },
       legend: {
-          data: [data.proposeName, '全体样本', '样本与全体比例']
+          data: [data.proposeName, '全体样本', '样本与全体比例关系']
       },
       xAxis: [
           {
@@ -54,19 +54,21 @@ const GraphArea = (props) => {
         {
             type: 'value',
             name: '数值',
-            min: data.axis.min,
-            max: data.axis.max,
-            interval: data.axis.interval,
+            min: data.axisL.min,
+            max: data.axisL.max,
+            interval: data.axisL.interval,
             axisLabel: {
               formatter: '{value}'
             }
         },
         {
           type: 'value',
-          name: '样本与全体百分比',
+          name: '比例关系',
           min: 0,
-          max: 1,
-          interval: 0.1,
+          max: 1.5,
+          splitLine: {
+            show: false,
+          },
           axisLabel: {
             formatter: '{value} %'
           }

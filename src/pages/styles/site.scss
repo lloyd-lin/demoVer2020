@@ -30,9 +30,13 @@ body {
     background-color: white;
     height: auto;
   }
+}
 
+.history-graph-modal {
+  width: 800px;
   #graphArea {
-    height: 300px;
+    height: 600px;
+    width: 760px;
   }
 }
 

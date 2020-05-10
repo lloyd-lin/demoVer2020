@@ -17450,6 +17450,9 @@ body {
   background-color: white;
   height: auto; }
 
-.primary-layout #graphArea {
-  height: 300px; }
+.history-graph-modal {
+  width: 800px; }
+  .history-graph-modal #graphArea {
+    height: 600px;
+    width: 760px; }
 

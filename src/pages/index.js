@@ -5,13 +5,14 @@ import SideBar from "./components/sideBar";
 import HomePage from "./origin";
 import HistoryPage from "./history";
 import LoginPage from "./login";
+import uploadPage from "./upload"
 import menuConfig from "../config/menu";
 
 import "./styles/base.scss";
 import "./styles/site.scss";
 
 import { Layout, Menu, Breadcrumb } from "antd";
-import { BarChartOutlined } from "@ant-design/icons";
+import { BarChartOutlined, UpCircleFilled } from "@ant-design/icons";
 
 const { Header, Content, Sider } = Layout;
 
@@ -29,7 +30,6 @@ const PrimaryLayout = () => {
       return value.key === key[0];
     })
     setBreadCrumbArr([menuOne.value, valueTwo.value])
-    console.log(key)
   }
   return (
     <div className="primary-layout">
@@ -62,6 +62,7 @@ const PrimaryLayout = () => {
             >
               <Route path="/origin-search" exact component={HomePage} />
               <Route path="/history-search" exact component={HistoryPage} />
+              <Route path="/file-upload" exact component={uploadPage} />
             </Content>
           </Layout>
         </Layout>

@@ -15,11 +15,50 @@ message.config({
   rtl: true,
 });
 
+const defaultKeyEvent = () => {
+  if (event.keyCode==13) {
+    return;
+  }
+}
+
 const LoginPage = (props) => {
     window.axios =axios;
     const [username, setUsername] = useState('');
     const [password, setPasswort] = useState('');
+    const keyevent = (name) => {
+      if(event.keyCode==13) {
+        // loginAction();
+      }
+    }
+    useEffect(() => {
+      document.onkeydown = keyevent;
+      return () => {
+        document.onkeydown = defaultKeyEvent;
+      }
+    },[]) 
 
+    const loginAction = () => {
+      axios({
+        method: 'post',
+        url: 'http://127.0.0.1:8888/DBManagementSystemWcf/user/login',
+        data: {
+          name: username,
+          password,
+        },
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded'
+        }
+      }).then(res=> {
+        if (res.data && res.data.Success) {
+          localStorage.setItem("UserNo", res.data.UserNo)
+          props.history.push('/origin-search');
+        } else {
+          message.info(res.data.Message);
+        }
+      }, e => {
+        message.info('系统繁忙，稍后再试')
+      });
+    }
     return (
       <Layout className="login-page">
         <Content>
@@ -43,28 +82,7 @@ const LoginPage = (props) => {
             </div>
           </div>
           <div className="login-item">
-            <Button type="primary" shape="round" icon={<LoginOutlined />} size="large" onClick={() => {
-              axios({
-                method: 'post',
-                url: 'http://127.0.0.1:8888/DBManagementSystemWcf/user/login',
-                data: {
-                  name: username,
-                  password,
-                },
-                headers: {
-                  'content-type': 'application/x-www-form-urlencoded'
-                }
-              }).then(res=> {
-                if (res.data && res.data.Success) {
-                  localStorage.setItem("UserNo", res.data.UserNo)
-                  props.history.push('/origin-search');
-                } else {
-                  message.info(res.data.Message);
-                }
-              }, e => {
-                message.info('系统繁忙，稍后再试')
-              });
-            }}>
+            <Button type="primary" shape="round" icon={<LoginOutlined />} size="large" onClick={loginAction}>
               登录
             </Button>
           </div>

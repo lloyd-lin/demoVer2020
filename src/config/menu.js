@@ -36,6 +36,11 @@ export default [
         value: '历史方案查询',
         icon: '',
       },
+      {
+        key: 'file-upload',
+        value: '原始数据上传',
+        icon: '',
+      },
     ]
   }
 ];
