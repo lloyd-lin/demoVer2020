@@ -53,10 +53,11 @@ const PageContext = () => {
       newColumn.push({
         "Display": "操作",
         "Name": "Action",
-        "Width": 10,
+        "Width": 15,
         "Action": (text, record) => (
           <Space size="middle">
             <a onClick={browseHistory.bind(null, record.ProposeName)}>查看历史数据</a>
+            <a onClick={delHistory.bind(null, record.ProposeName)}>删除历史数据</a>
           </Space>
         ),
       })
@@ -117,6 +118,30 @@ const PageContext = () => {
     })
   }
 
+  const delHistory = (name) => {
+    setLoading(true)
+    axios({
+      method: 'post',
+      url: 'http://127.0.0.1:8888/DBManagementSystemWcf/export/deletebyproposename',
+      data: {
+        proposeName: name,
+      },
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded'
+      }
+    }).then(res => {
+      if (res.data.Success) {
+        message.info('删除方案成功')
+        backToProposeList();
+      } else {
+        message.info('删除方案失败')
+        setLoading(false)
+      }
+    }, e => {
+      console.log('错误', e)
+    })
+  }
+
   const handleTableChange = (pagination) => {
     setLoading(true)
     const param = currentMode === 'propose' ? {
@@ -146,10 +171,11 @@ const PageContext = () => {
         newColumn.push({
           "Display": "操作",
           "Name": "Action",
-          "Width": 10,
+          "Width": 15,
           "Action": (text, record) => (
             <Space size="middle">
               <a onClick={browseHistory.bind(null, record.ProposeName)}>查看历史数据</a>
+              <a onClick={delHistory.bind(null, record.ProposeName)}>删除历史数据</a>
             </Space>
           ),
         })
@@ -185,10 +211,11 @@ const PageContext = () => {
       newColumn.push({
         "Display": "操作",
         "Name": "Action",
-        "Width": 10,
+        "Width": 15,
         "Action": (text, record) => (
           <Space size="middle">
             <a onClick={browseHistory.bind(null, record.ProposeName)}>查看历史数据</a>
+            <a onClick={delHistory.bind(null, record.ProposeName)}>删除历史数据</a>
           </Space>
         ),
       })

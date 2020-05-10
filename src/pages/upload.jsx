@@ -69,7 +69,7 @@ const UploadPage = (props) => {
             setImportStatus(Message)
           }
         } else {
-          setImportProgress((CurrentCount / RecordCount * 100).toFixed(0))
+          setImportProgress(((CurrentCount / RecordCount * 100) || 0).toFixed(0))
           setImportStatus(`${Message} ${CurrentCount}/${RecordCount}`)
           setTimeout(queryImportStatus, 300)
         }
