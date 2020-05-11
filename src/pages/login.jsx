@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Layout, Input, Button, message } from 'antd';
-import { ContactsOutlined, UserOutlined, LoginOutlined  } from '@ant-design/icons';
+import { ContactsOutlined, UserOutlined, LoginOutlined, LockOutlined  } from '@ant-design/icons';
 import { hot } from 'react-hot-loader';
 import axios from 'axios';
 
@@ -25,25 +25,31 @@ const LoginPage = (props) => {
     window.axios =axios;
     const [username, setUsername] = useState('');
     const [password, setPasswort] = useState('');
-    const keyevent = (name) => {
-      if(event.keyCode==13) {
-        // loginAction();
-      }
-    }
+    const usenameRef = useRef('');
+    const passwordRef = useRef('');
     useEffect(() => {
       document.onkeydown = keyevent;
       return () => {
         document.onkeydown = defaultKeyEvent;
       }
     },[]) 
+    useEffect(() => {
+      usenameRef.current = username;
+      passwordRef.current = password;
+    });
 
+    const keyevent = () => {
+      if(event.keyCode==13) {
+        loginAction();
+      }
+    }
     const loginAction = () => {
       axios({
         method: 'post',
         url: 'http://127.0.0.1:8888/DBManagementSystemWcf/user/login',
         data: {
-          name: username,
-          password,
+          name: usenameRef.current,
+          password: passwordRef.current,
         },
         headers: {
           'content-type': 'application/x-www-form-urlencoded'
@@ -70,14 +76,16 @@ const LoginPage = (props) => {
             <div className="input-area-item">
               <Input
                 size="large"
-                placeholder="username"
+                placeholder="用户名"
                 prefix={<UserOutlined/>}
-                onChange={(e) => setUsername(e.currentTarget.value)}/>
+                onChange = {(e) => setUsername(e.currentTarget.value)}
+                />
             </div>
             <div className="input-area-item">
               <Input.Password 
                 size="large"
-                placeholder="password" 
+                placeholder="密码" 
+                prefix={<LockOutlined/>}
                 onChange={(e) => setPasswort(e.currentTarget.value)}/>
             </div>
           </div>

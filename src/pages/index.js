@@ -17,12 +17,24 @@ import { BarChartOutlined, UpCircleFilled } from "@ant-design/icons";
 const { Header, Content, Sider } = Layout;
 
 const PrimaryLayout = () => {
-  const [breadCrumbArr, setBreadCrumbArr] = useState(['数据检索', '原始数据检索查询'])
+  const [breadCrumbArr, setBreadCrumbArr] = useState(['', ''])
+  const [currentSideKey, setCurrentSideKey] = useState(['', ''])
   const [sideMenu, setSideMenu] = useState(menuConfig)
   useEffect(() => {
-
+    const RouteArr = location.hash.match(/(?!\/)(\w*)-(\w*)/);
+    if (!RouteArr) return;
+    const menuOne = menuConfig.find((value) => {
+      return value.key === RouteArr[1];
+    })
+    if (!menuOne) return ;
+    const valueTwo = menuOne.children.find((value) => {
+      return value.key === RouteArr[0];
+    })
+    setBreadCrumbArr([menuOne.value, valueTwo.value])
+    setCurrentSideKey([menuOne.key, valueTwo.key])
   }, []);
   const handleSideBar = (key) => {
+    console.log(key)
     const menuOne = menuConfig.find((value) => {
       return value.key === key[1];
     })
@@ -30,6 +42,7 @@ const PrimaryLayout = () => {
       return value.key === key[0];
     })
     setBreadCrumbArr([menuOne.value, valueTwo.value])
+    setCurrentSideKey([menuOne.key, valueTwo.key])
   }
   return (
     <div className="primary-layout">
@@ -46,7 +59,7 @@ const PrimaryLayout = () => {
         </Header>
         <Layout>
           <Sider>
-            <SideBar sideMenu={sideMenu} handleSideBar={handleSideBar} />
+            <SideBar sideMenu={sideMenu} currentSideKey={currentSideKey} handleSideBar={handleSideBar} />
           </Sider>
           <Layout style={{ padding: "0 24px 24px" }}>
             <Breadcrumb style={{ margin: "16px 0" }}>
@@ -55,14 +68,14 @@ const PrimaryLayout = () => {
             <Content
               className="site-layout-background"
               style={{
-                padding: 24,
+                padding: 5,
                 margin: 0,
                 minHeight: 280
               }}
             >
-              <Route path="/origin-search" exact component={HomePage} />
-              <Route path="/history-search" exact component={HistoryPage} />
-              <Route path="/file-upload" exact component={uploadPage} />
+              <Route path="/data-origin" exact component={HomePage} />
+              <Route path="/data-history" exact component={HistoryPage} />
+              <Route path="/data-upload" exact component={uploadPage} />
             </Content>
           </Layout>
         </Layout>

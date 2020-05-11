@@ -18,8 +18,8 @@ message.config({
 
 
 const UploadPage = (props) => {
-    window.axios =axios;
     const [filePath, setFilePath] = useState('');
+    const [showProgess, setShowProgess] = useState(false)
     const [importProgress, setImportProgress] = useState(0);
     const [importStatus, setImportStatus] = useState('未导入');
     let traceId = "";
@@ -38,6 +38,7 @@ const UploadPage = (props) => {
           'content-type': 'application/x-www-form-urlencoded'
         }
       }).then(res=> {
+        setShowProgess(true)
         if (res.data.Success) {
           setImportStatus("开始导入")
           traceId = res.data.TraceID
@@ -46,6 +47,7 @@ const UploadPage = (props) => {
           setImportStatus("原始数据导入异常")
         }
       }, e => {
+        setShowProgess(true)
         setImportStatus('原始数据导入失败，请确认路径')
       });
     }
@@ -117,16 +119,16 @@ const UploadPage = (props) => {
               </Col>
             </Space>
           </Row>
-          <Row>
+          { showProgess && (<><Row style={{ marginTop: '1rem'}}>
             <Col span={8}>      
-              <Progress percent={importProgress} />
+              <Progress percent={importProgress} status="active" />
             </Col>
           </Row>
-          <Row>     
-            <Col span={4}>      
+          <Row style={{ marginTop: '1rem'}}>     
+            <Col span={12}>      
               {importStatus}
             </Col>
-          </Row>
+          </Row></>)}
         </Content>
       </Layout>
     );

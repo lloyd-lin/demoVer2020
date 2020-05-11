@@ -1,11 +1,12 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable react/no-array-index-key */
 // App.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { hot } from 'react-hot-loader';
 import { debounce } from 'lodash-es';
 import classnames from 'classnames';
-import { Layout, Row, Col, Select, Input, Space, Button, Modal, message  } from "antd";
+import { Layout, Row, Col, Select, Input, Space, Button, Modal, message, Tooltip  } from "antd";
+import { SearchOutlined } from '@ant-design/icons';
 const { Header, Content, Footer } = Layout;
 const { Option } = Select;
 import DataTable from './components/dataTable'
@@ -19,6 +20,12 @@ message.config({
   maxCount: 1,
   rtl: true,
 });
+
+const defaultKeyEvent = () => {
+  if (event.keyCode==13) {
+    return;
+  }
+}
 
 const PageContext = () => {
   const [conditionOne, setConditionOne] = useState('');
@@ -38,7 +45,11 @@ const PageContext = () => {
     showTotal: total => `总条目 ${total} 条`
   });
 
+  const conditionOneRef = useRef('');
+  const conditionTwoMinRef = useRef('');
+  const conditionTwoMaxRef = useRef('');
   useEffect(() => {
+    document.onkeydown = keyevent;
     setLoading(true)
     axios({
       method: 'get',
@@ -62,7 +73,30 @@ const PageContext = () => {
       setLoading(false)
       console.log('错误', e)
     });
+
+    return () => {
+      setTableData([])
+      setColumnData([]);
+      document.onkeydown = defaultKeyEvent;
+    }
   }, [])
+
+  useEffect(() => {
+    conditionOneRef.current = conditionOne;
+  }, [conditionOne]);
+  useEffect(() => {
+    conditionTwoMinRef.current = conditionTwoMin;
+  }, [conditionTwoMin]);
+  useEffect(() => {
+    conditionTwoMaxRef.current = conditionTwoMax;
+  }, [conditionTwoMax]);
+
+  const keyevent = () => {
+    if(event.keyCode==13) {
+      searchAll();
+    }
+  }
+
   const handleChange = (value) => {
     setConditionOne(value.length > 0 ? JSON.stringify(value) : '');
   }
@@ -121,12 +155,47 @@ const PageContext = () => {
     setShowPropose(false);
     setPropose('')
   }
+
+  const searchAll = () => {
+    setLoading(true);
+    axios({
+      method: "get",
+      url:
+        "http://127.0.0.1:8888/DBManagementSystemWcf/export/getbyconditions",
+      params: {
+        con1: conditionOneRef.current,
+        con4: `${conditionTwoMinRef.current || "*"}~${
+          conditionTwoMaxRef.current || "*"
+        }`,
+        pagesize: 10,
+        pageindex: 1,
+      },
+    }).then(
+      (res) => {
+        const { data } = res;
+        setLoading(false);
+        setTableData(data.data);
+        setColumnData(data.column);
+        setPagination({
+          ...pagination,
+          pageSize: 10,
+          current: 1,
+          total: data.total_count,
+        });
+      },
+      (e) => {
+        setLoading(false);
+        console.log("错误", e);
+      }
+    );
+  }
+
   return (
     <>
       <Layout>
         <Header className="static-inner-header">
           <Row>
-            <Col span={24}>
+            <Col xs={24} sm={24} md={24} lg={14} xl={12}>
               <Space style={{ width: "100%" }}>
                 {"筛选条件一"}
                 <Select
@@ -152,61 +221,34 @@ const PageContext = () => {
                 </Select>
               </Space>
             </Col>
-            <Col span={16}>
+            <Col xs={20} sm={20} md={20} lg={8} xl={8}>
               <Space>
                 {"筛选条件四"}
                 <Input
+                  style={{ width: '80px' }}
                   placeholder={"最小值"}
                   onChange={(e) => setConditionTwoMin(e.currentTarget.value)}
                 />
                 {"~"}
                 <Input
+                  style={{ width: '80px' }}
                   placeholder={"最大值"}
                   onChange={(e) => setConditionTwoMax(e.currentTarget.value)}
                 />
               </Space>
             </Col>
-            <Col span={4}>
+            <Col xs={4} sm={4} md={4} lg={1} xl={4}>
+              <Tooltip title="检索">
               <Button
-                type="primary"
-                onClick={() => {
-                  setLoading(true);
-                  axios({
-                    method: "get",
-                    url:
-                      "http://127.0.0.1:8888/DBManagementSystemWcf/export/getbyconditions",
-                    params: {
-                      con1: conditionOne,
-                      con4: `${conditionTwoMin || "*"}~${
-                        conditionTwoMax || "*"
-                      }`,
-                      pagesize: 10,
-                      pageindex: 1,
-                    },
-                  }).then(
-                    (res) => {
-                      const { data } = res;
-                      setLoading(false);
-                      setTableData(data.data);
-                      setColumnData(data.column);
-                      setPagination({
-                        ...pagination,
-                        pageSize: 10,
-                        current: 1,
-                        total: data.total_count,
-                      });
-                    },
-                    (e) => {
-                      setLoading(false);
-                      console.log("错误", e);
-                    }
-                  );
-                }}
-              >
-                检索
-              </Button>
+                shape="circle" 
+                icon={<SearchOutlined />} 
+                onClick={searchAll}
+              />
+              </Tooltip>
             </Col>
-            <Col span={4}>
+          </Row>
+          <Row>
+            <Col span={24} style={{ 'textAlign': 'center' }}>
               <Button
                 type="primary"
                 onClick={() => {

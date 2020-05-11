@@ -9,10 +9,7 @@ import { withRouter } from 'react-router-dom';
 
 const { SubMenu } = Menu;
 const Sider = (props) => {
-  const [current, setCurrent] = useState(['origin-search','search'])
-
   const handleClick = e => {
-    setCurrent(e.keyPath)
     props.handleSideBar(e.keyPath);
   };
 
@@ -26,27 +23,22 @@ const Sider = (props) => {
   }
   return (
     <>  
-      <Menu
-        theme={'dark'}
-        onClick={handleClick}
-        style={{ width: 200 }}
-        defaultOpenKeys={[current[1]]}
-        selectedKeys={[current[0]]}
-        mode="inline"
-      >
+      {props.currentSideKey[0] && props.currentSideKey[1] &&
+      <Menu theme={'dark'} onClick={handleClick} style={{ width: 200 }} defaultOpenKeys={[props.currentSideKey[0]]}
+        selectedKeys={[props.currentSideKey[1]]} mode="inline">
         {props.sideMenu.map((item) => {
-          return <SubMenu key={item.key} icon={iconFactory(item.icon)} title={item.value}>
-            {
-              item.children.map(secItem => {
-                return <Menu.Item key={secItem.key} onClick={() => {
+        return <SubMenu key={item.key} icon={iconFactory(item.icon)} title={item.value}>
+          {
+          item.children.map(secItem => {
+          return <Menu.Item key={secItem.key} onClick={()=> {
 
-                  props.history.push(`/${secItem.key}`);
-                }}>{secItem.value}</Menu.Item>
-              })
-            }
-          </SubMenu>
+            props.history.push(`/${secItem.key}`);
+            }}>{secItem.value}</Menu.Item>
+          })
+          }
+        </SubMenu>
         })}
-      </Menu>
+      </Menu>}
     </>
   );
 };

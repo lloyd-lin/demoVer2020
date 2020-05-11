@@ -5,39 +5,39 @@ export default [
     icon: 'SettingOutlined',
     children: [
       {
-        key: 'auth',
+        key: 'user-auth',
         value: '用户授权',
         icon: '',
       },
       {
-        key: 'manager-pwd',
+        key: 'user-manager-pwd',
         value: '密码管理',
         icon: '',
       },
       {
-        key: 'log',
+        key: 'user-log',
         value: '日志查看',
         icon: '',
       },
     ]
   },
   {
-    key: 'search',
+    key: 'data',
     value: '数据检索',
     icon: 'InsertRowLeftOutlined',
     children: [
       {
-        key: 'origin-search',
+        key: 'data-origin',
         value: '原始数据检索查询',
         icon: '',
       },
       {
-        key: 'history-search',
+        key: 'data-history',
         value: '历史方案查询',
         icon: '',
       },
       {
-        key: 'file-upload',
+        key: 'data-upload',
         value: '原始数据上传',
         icon: '',
       },

@@ -48,3 +48,14 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+.ant-input {
+	&::placeholder {
+		color: rgba(0, 0, 0, .65);
+		opacity: 0.4;
+	}
+}
+
+.ant-space-item {
+	word-break: keep-all;
+}
