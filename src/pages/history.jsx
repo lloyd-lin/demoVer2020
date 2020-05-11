@@ -5,7 +5,9 @@ import React, { useState, useEffect } from 'react';
 import { hot } from 'react-hot-loader';
 import { debounce } from 'lodash-es';
 import classnames from 'classnames';
-import { Layout, Row, Col, Select, Input, Space, Button, Modal, message  } from "antd";
+import { Layout, Row, Col, Select, Tooltip, Space, Button, Modal, message  } from "antd";
+import { DeleteOutlined, BarChartOutlined, RollbackOutlined  } from '@ant-design/icons';
+ 
 const { Header, Content, Footer } = Layout;
 const { Option } = Select;
 import DataTable from './components/dataTable'
@@ -53,11 +55,23 @@ const PageContext = () => {
       newColumn.push({
         "Display": "操作",
         "Name": "Action",
-        "Width": 15,
+        "Width": 6,
         "Action": (text, record) => (
           <Space size="middle">
-            <a onClick={browseHistory.bind(null, record.ProposeName)}>查看历史数据</a>
-            <a onClick={delHistory.bind(null, record.ProposeName)}>删除历史数据</a>
+             <Tooltip title="查看历史">
+              <Button
+                shape="circle" 
+                icon={<BarChartOutlined />} 
+                onClick={browseHistory.bind(null, record.ProposeName)}
+              />
+              </Tooltip>
+              <Tooltip title="删除">
+              <Button
+                shape="circle" 
+                icon={<DeleteOutlined />} 
+                onClick={delHistory.bind(null, record.ProposeName)}
+              />
+              </Tooltip>
           </Space>
         ),
       })
@@ -171,11 +185,23 @@ const PageContext = () => {
         newColumn.push({
           "Display": "操作",
           "Name": "Action",
-          "Width": 15,
+          "Width": 6,
           "Action": (text, record) => (
             <Space size="middle">
-              <a onClick={browseHistory.bind(null, record.ProposeName)}>查看历史数据</a>
-              <a onClick={delHistory.bind(null, record.ProposeName)}>删除历史数据</a>
+               <Tooltip title="查看历史">
+              <Button
+                shape="circle" 
+                icon={<BarChartOutlined />} 
+                onClick={browseHistory.bind(null, record.ProposeName)}
+              />
+              </Tooltip>
+              <Tooltip title="删除">
+              <Button
+                shape="circle" 
+                icon={<DeleteOutlined />} 
+                onClick={delHistory.bind(null, record.ProposeName)}
+              />
+              </Tooltip>
             </Space>
           ),
         })
@@ -211,11 +237,23 @@ const PageContext = () => {
       newColumn.push({
         "Display": "操作",
         "Name": "Action",
-        "Width": 15,
+        "Width": 6,
         "Action": (text, record) => (
           <Space size="middle">
-            <a onClick={browseHistory.bind(null, record.ProposeName)}>查看历史数据</a>
-            <a onClick={delHistory.bind(null, record.ProposeName)}>删除历史数据</a>
+             <Tooltip title="查看历史">
+              <Button
+                shape="circle" 
+                icon={<BarChartOutlined />} 
+                onClick={browseHistory.bind(null, record.ProposeName)}
+              />
+              </Tooltip>
+              <Tooltip title="删除">
+              <Button
+                shape="circle" 
+                icon={<DeleteOutlined />} 
+                onClick={delHistory.bind(null, record.ProposeName)}
+              />
+              </Tooltip>
           </Space>
         ),
       })
@@ -273,12 +311,16 @@ const PageContext = () => {
       <Layout>
         {currentMode === 'history' && <Header className="static-inner-header">
           <Row>
-            <Col span={4}>
-            <Button type="primary" onClick={backToProposeList}>
-              返回方案列表
-            </Button>
+            <Col span={10}>
+            <Tooltip title="查看历史">
+              <Button
+                shape="circle" 
+                icon={<RollbackOutlined />} 
+                onClick={backToProposeList}
+              />
+              </Tooltip>
             </Col>
-            <Col span={4}>
+            <Col span={12}>
             <Button type="primary" onClick={getGraph}>
               生成统计
             </Button>

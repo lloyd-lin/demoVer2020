@@ -21,20 +21,25 @@ const PrimaryLayout = () => {
   const [currentSideKey, setCurrentSideKey] = useState(['', ''])
   const [sideMenu, setSideMenu] = useState(menuConfig)
   useEffect(() => {
-    const RouteArr = location.hash.match(/(?!\/)(\w*)-(\w*)/);
-    if (!RouteArr) return;
-    const menuOne = menuConfig.find((value) => {
-      return value.key === RouteArr[1];
-    })
-    if (!menuOne) return ;
-    const valueTwo = menuOne.children.find((value) => {
-      return value.key === RouteArr[0];
-    })
-    setBreadCrumbArr([menuOne.value, valueTwo.value])
-    setCurrentSideKey([menuOne.key, valueTwo.key])
+    const setRouteMenu = () => {
+      const RouteArr = location.hash.match(/(?!\/)(\w*)-(\w*)/);
+      if (!RouteArr) return;
+      const menuOne = menuConfig.find((value) => {
+        return value.key === RouteArr[1];
+      })
+      if (!menuOne) return ;
+      const valueTwo = menuOne.children.find((value) => {
+        return value.key === RouteArr[0];
+      })
+      setBreadCrumbArr([menuOne.value, valueTwo.value])
+      setCurrentSideKey([menuOne.key, valueTwo.key])
+    }
+    document.body.onhashchange = () => {
+      setRouteMenu()
+    }
+    setRouteMenu()
   }, []);
   const handleSideBar = (key) => {
-    console.log(key)
     const menuOne = menuConfig.find((value) => {
       return value.key === key[1];
     })

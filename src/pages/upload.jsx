@@ -20,6 +20,7 @@ message.config({
 const UploadPage = (props) => {
     const [filePath, setFilePath] = useState('');
     const [showProgess, setShowProgess] = useState(false)
+    const [progressStatus, setProgressStatus] = useState('normal')
     const [importProgress, setImportProgress] = useState(0);
     const [importStatus, setImportStatus] = useState('未导入');
     let traceId = "";
@@ -67,10 +68,13 @@ const UploadPage = (props) => {
           if (CurrentCount === RecordCount) {    
             setImportProgress(100)
             setImportStatus(Message)
+            setProgressStatus('success')
           } else {
             setImportStatus(Message)
+            setProgressStatus('exception')
           }
         } else {
+          setProgressStatus('active')
           setImportProgress(((CurrentCount / RecordCount * 100) || 0).toFixed(0))
           setImportStatus(`${Message} ${CurrentCount}/${RecordCount}`)
           setTimeout(queryImportStatus, 300)
@@ -121,7 +125,7 @@ const UploadPage = (props) => {
           </Row>
           { showProgess && (<><Row style={{ marginTop: '1rem'}}>
             <Col span={8}>      
-              <Progress percent={importProgress} status="active" />
+              <Progress percent={importProgress} status={progressStatus} />
             </Col>
           </Row>
           <Row style={{ marginTop: '1rem'}}>     

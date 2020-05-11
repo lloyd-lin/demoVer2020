@@ -17358,8 +17358,12 @@ textarea.ant-pagination-options-quick-jumper input {
   margin-left: 0;
 }
 
+.primary-layout .ant-layout.login-page {
+  background-color: #f9f9f9; }
+
 .login-page {
-  margin: 5rem auto; }
+  margin: 0 auto;
+  padding-top: 5rem; }
   .login-page .ant-layout-content {
     width: 25rem;
     margin: 0 auto;
@@ -17666,6 +17670,13 @@ q:before, q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0; }
+
+.ant-input::placeholder {
+  color: rgba(0, 0, 0, 0.65);
+  opacity: 0.4; }
+
+.ant-space-item {
+  word-break: keep-all; }
 
 * {
   box-sizing: border-box; }
