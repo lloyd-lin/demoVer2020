@@ -103,7 +103,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.1.0",
     "antd": "^4.2.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "echarts": "^4.7.0",
     "lodash-es": "4.17.11",
     "prop-types": "15.7.2"
